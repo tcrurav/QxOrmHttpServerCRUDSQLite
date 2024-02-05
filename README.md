@@ -50,9 +50,11 @@ You can test the endpoints with the following POSTMAN:
 https://documenter.getpostman.com/view/3446841/2s9YywdeFP
 
 It's IMPORTANT to mention that the following header is necessary to do the POST, PUT and DELETE:
+
 ![screenshots](screenshots/screenshot-01.png)
 
 this header value must match the line in main.cpp:
+
 ![screenshots](screenshots/screenshot-02.png)
 
 Enjoy!!!
