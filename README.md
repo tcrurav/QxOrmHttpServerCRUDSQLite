@@ -35,7 +35,7 @@ I have installed QxOrm with the following options:
  - I haven't installed the Boost options in the tutorial: https://www.qxorm.com/qxorm_en/tutorial_3.html.
  - After finishing the tutorial I have opened the project QxOrm using Qt Creator 12.1 with MinGW.
  
-In this moment check that the libraries libQxOrmd.dll and libQxOrmd.dll.a have been created in the directory QxOrm\lib of your installation.
+In this moment check that the libraries ````libQxOrmd.dll```` and ````libQxOrmd.dll.a```` have been created in the directory ````QxOrm\lib```` of your installation.
 
 Once you have followed the instructions to install Qt and QxOrm be sure that the example QxBlog in the directory ````QxOrm\test\qxBlog```` works perfectly. I opened it clicking on qxBlog.pro using qmake.
 
@@ -99,17 +99,21 @@ DELETE http://localhost:49080/v2/contact/1
 curl --location --request DELETE 'http://localhost:49080/v2/contact/1' \
 --header 'api_key: SecretKey'
 ````
+## Possible improvements
+
+ - It would be great to modify the necessary, maybe in qxBicycles.pro to be able to move the project to any directory other than ````QxOrm\test````.
 
 ## Built With
 
 * [Qt Creator](https://www.qt.io/download-open-source) - Install the community version.
 * [QxOrm](https://www.qxorm.com/) - For Windows follow this instructions: https://www.qxorm.com/qxorm_en/tutorial_3.html.
+* [DB Browser for SQLite](https://sqlitebrowser.org/) - DB Browser for SQLite (DB4S) is a high quality, visual, open source tool to create, design, and edit database files compatible with SQLite. I have used it to test the SQLite database.
 
 ## Acknowledgments
 
 * https://felgo.com/doc/qt/qthttpserver-addressbook-example/. RESTful server Address Book Example. This project is basically this example.
 * https://www.qxorm.com/. For Windows follow this instructions: https://www.qxorm.com/qxorm_en/tutorial_3.html.
 * https://doc.qt.io/qt-6/qthttpserver-colorpalette-example.html. RESTful API Server
-* https://doc.qt.io/qt-6/qthttpserver-simple-example.html. Simple HTTP Server
+* https://doc.qt.io/qt-6/qthttpserver-simple-example.html. Simple HTTP Server.
 * https://www.w3schools.com/cpp/. An introduction to C++.
 * https://github.com/PurpleBooth/a-good-readme-template. A good README.md template.
