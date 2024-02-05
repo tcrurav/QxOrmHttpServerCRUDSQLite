@@ -101,7 +101,7 @@ curl --location --request DELETE 'http://localhost:49080/v2/contact/1' \
 ````
 ## Possible improvements
 
- - It would be great to modify the necessary, maybe in qxBicycles.pro to be able to move the project to any directory other than ````QxOrm\test````.
+ - It would be great to modify the necessary, maybe in qxBicycles.pro, to be able to move the project to any directory other than ````QxOrm\test````. Now the project must be located inside ````QxOrm\test````.
 
 ## Built With
 
