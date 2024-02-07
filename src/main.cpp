@@ -36,11 +36,13 @@ int main(int argc, char *argv[])
     QFile::remove("./qxBicycles.sqlite");
 
     // Parameters to connect to database
-    qx::QxSqlDatabase::getSingleton()->setDriverName("QSQLITE");
-    qx::QxSqlDatabase::getSingleton()->setDatabaseName("./qxBicycles.sqlite");
+    // qx::QxSqlDatabase::getSingleton()->setDriverName("QSQLITE");
+    // qx::QxSqlDatabase::getSingleton()->setDatabaseName("./qxBicycles.sqlite");
+    qx::QxSqlDatabase::getSingleton()->setDriverName("QMYSQL");
+    qx::QxSqlDatabase::getSingleton()->setDatabaseName("qt_bicycles");
     qx::QxSqlDatabase::getSingleton()->setHostName("localhost");
     qx::QxSqlDatabase::getSingleton()->setUserName("root");
-    qx::QxSqlDatabase::getSingleton()->setPassword("");
+    qx::QxSqlDatabase::getSingleton()->setPassword("sasota");
     qx::QxSqlDatabase::getSingleton()->setFormatSqlQueryBeforeLogging(true);
     qx::QxSqlDatabase::getSingleton()->setDisplayTimerDetails(true);
 

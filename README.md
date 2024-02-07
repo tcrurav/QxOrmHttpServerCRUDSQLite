@@ -105,6 +105,23 @@ curl --location --request DELETE 'http://localhost:49080/v2/contact/1' \
 
  - It would be great to modify the necessary, maybe in qxBicycles.pro, to be able to move the project to any directory other than ````QxOrm\test````. Now the project must be located inside ````QxOrm\test````.
 
+ ## MySql driver
+
+https://doc.qt.io/qt-6/sql-driver.html#qmysql-for-mysql-or-mariadb-5-and-higher
+
+instalar cmake (https://cmake.org/download/)
+
+C:\Qt\Tools\mingw1120_64\bin
+
+set the environment variable CMAKE_GENERATOR to Ninja
+
+mkdir build-sqldrivers
+cd build-sqldrivers
+<!-- qt-cmake -G Ninja C:\Qt\6.6.1\Src\qtbase\src\plugins\sqldrivers -DCMAKE_INSTALL_PREFIX="C:/Qt/6.6.1/mingw_64" -DMySQL_INCLUDE_DIR="C:\\Program Files\\MySQL\\MySQL Server 8.0\\include" -DMySQL_LIBRARY="C:\\Program Files\\MySQL\\MySQL Server 8.0\\lib\\libmysql.lib" -->
+qt-cmake -G Ninja C:\Qt\6.6.1\Src\qtbase\src\plugins\sqldrivers -DCMAKE_INSTALL_PREFIX="C:/Qt/6.6.1/mingw_64" -DMySQL_INCLUDE_DIR="C:\\hola" -DMySQL_LIBRARY="C:\\hola\\libmysql.lib"
+cmake --build .
+cmake --install .
+
 ## Built With
 
 * [Qt Creator](https://www.qt.io/download-open-source) - Install the community version.
