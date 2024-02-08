@@ -15,6 +15,7 @@ QT += widgets
 QT += quick
 QT += qml
 QT += httpserver
+QT += websockets
 } else {
 QT += declarative
 }

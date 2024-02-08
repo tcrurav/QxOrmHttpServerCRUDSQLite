@@ -20,6 +20,13 @@ static bool checkApiKeyHeader(const QList<QPair<QByteArray, QByteArray>> &header
     return false;
 }
 
+static void setCorsHeaders(QHttpServerResponse &response)
+{
+    response.setHeader("Access-Control-Allow-Origin", "http://localhost:8081");
+    response.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+    response.setHeader("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+}
+
 static std::optional<QJsonObject> byteArrayToJsonObject(const QByteArray &arr)
 {
     QJsonParseError err;
@@ -79,6 +86,18 @@ int main(int argc, char *argv[])
 
     QHttpServer httpServer;
 
+    httpServer.route("/v2/bicycle",QHttpServerRequest::Method::Options,
+                     [](const QHttpServerRequest &)
+                     {
+                         QHttpServerResponse response("");
+
+                         setCorsHeaders(response);
+                         return response;
+                     });
+    // httpServer.route(
+    //               "/v2/bicycle/<arg>", QHttpServerRequest::Method::Put,
+    //               [](qint64 bicycleId, const QHttpServerRequest &request)
+
     httpServer.route(
         "/", []()
         { return "Bicycles API using QxOrm & QtHttpServer"; });
@@ -87,6 +106,7 @@ int main(int argc, char *argv[])
         "/v2/bicycle", QHttpServerRequest::Method::Get,
         [](const QHttpServerRequest &)
         {
+            qDebug() << "Entrando al GET";
             QSqlError daoError;
             QStringList lstColumns = QStringList() << "bicycle_id"
                                                    << "bicycle_brand"
@@ -104,7 +124,10 @@ int main(int argc, char *argv[])
                                                   {"model", QJsonValue(it->m_model)}};
                            });
 
-            return QHttpServerResponse(array);
+            QHttpServerResponse response(array);
+
+            setCorsHeaders(response);
+            return response;
         });
 
     httpServer.route(
@@ -116,21 +139,28 @@ int main(int argc, char *argv[])
             bicycle_aux->m_id = bicycleId;
             daoError = qx::dao::fetch_by_id(bicycle_aux);
 
-            return !daoError.isValid()
-                       ? QHttpServerResponse(QJsonObject{{"id", (int const)(bicycle_aux->m_id)},
-                                                         {"brand", QJsonValue(bicycle_aux->m_brand)},
-                                                         {"model", QJsonValue(bicycle_aux->m_model)}})
-                       : QHttpServerResponse(QHttpServerResponder::StatusCode::NotFound);
+            if(daoError.isValid()) {
+                QHttpServerResponse response(QHttpServerResponder::StatusCode::NotFound);
+                setCorsHeaders(response);
+                return response;
+            }
+
+            QHttpServerResponse response(QJsonObject{{"id", (int const)(bicycle_aux->m_id)},
+                                                     {"brand", QJsonValue(bicycle_aux->m_brand)},
+                                                     {"model", QJsonValue(bicycle_aux->m_model)}});
+            setCorsHeaders(response);
+            return response;
         });
 
     httpServer.route(
         "/v2/bicycle", QHttpServerRequest::Method::Post,
         [](const QHttpServerRequest &request)
         {
-            if (!checkApiKeyHeader(request.headers()))
-            {
-                return QHttpServerResponse(QHttpServerResponder::StatusCode::Unauthorized);
-            }
+            // if (!checkApiKeyHeader(request.headers()))
+            // {
+            //     return QHttpServerResponse(QHttpServerResponder::StatusCode::Unauthorized);
+            // }
+            qDebug() << "Entrando al POST";
             const auto json = byteArrayToJsonObject(request.body());
             if (!json || !json->contains("brand") || !json->contains("model"))
                 return QHttpServerResponse(QHttpServerResponder::StatusCode::BadRequest);
@@ -144,19 +174,25 @@ int main(int argc, char *argv[])
             QSqlError daoError;
             daoError = qx::dao::insert(bicycle_aux);
 
-            return !daoError.isValid()
-                       ? QHttpServerResponse(QHttpServerResponder::StatusCode::Created)
-                       : QHttpServerResponse(QHttpServerResponder::StatusCode::InternalServerError);
+            if(daoError.isValid()){
+                QHttpServerResponse response(QHttpServerResponder::StatusCode::InternalServerError);
+                setCorsHeaders(response);
+                return response;
+            }
+            QHttpServerResponse response(QHttpServerResponder::StatusCode::Created);
+            setCorsHeaders(response);
+            return response;
+
         });
 
     httpServer.route(
         "/v2/bicycle/<arg>", QHttpServerRequest::Method::Put,
         [](qint64 bicycleId, const QHttpServerRequest &request)
         {
-            if (!checkApiKeyHeader(request.headers()))
-            {
-                return QHttpServerResponse(QHttpServerResponder::StatusCode::Unauthorized);
-            }
+            // if (!checkApiKeyHeader(request.headers()))
+            // {
+            //     return QHttpServerResponse(QHttpServerResponder::StatusCode::Unauthorized);
+            // }
             const auto json = byteArrayToJsonObject(request.body());
             if (!json || !json->contains("brand") || !json->contains("model"))
             {
@@ -176,9 +212,17 @@ int main(int argc, char *argv[])
 
             daoError = qx::dao::save(bicycle_aux);
 
-            return !daoError.isValid()
-                       ? QHttpServerResponse(QHttpServerResponder::StatusCode::Ok)
-                       : QHttpServerResponse(QHttpServerResponder::StatusCode::InternalServerError);
+            // return !daoError.isValid()
+            //            ? QHttpServerResponse(QHttpServerResponder::StatusCode::Ok)
+            //            : QHttpServerResponse(QHttpServerResponder::StatusCode::InternalServerError);
+            if(daoError.isValid()){
+                QHttpServerResponse response(QHttpServerResponder::StatusCode::InternalServerError);
+                setCorsHeaders(response);
+                return response;
+            }
+            QHttpServerResponse response(QHttpServerResponder::StatusCode::Ok);
+            setCorsHeaders(response);
+            return response;
         });
 
     httpServer.route(
